@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DANCEFLOOR</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="https://www.dropbox.com/scl/fi/b4z2w9v7cngib9awumidv/fav16.png?rlkey=mb8l9tsbe084uxd8mqdw6jc9f&st=2vxbqkkx&raw=1">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://www.dropbox.com/scl/fi/tprwjyp4jcqwhj5wuxw4b/fav32.png?rlkey=mwb6fnbv45dimycc0qxl7f01y&st=mc4ew934&raw=1">
+    
+    <!-- Bootstrap for basic styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <!-- Custom CSS -->
+    <style>
+        /* Importation de la police WOFF */
+        @font-face {
+            font-family: 'MyCustomFont';
+            src: url('fonts/HelveticaNeueBold.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            background-color: #191919; /* Dark background */
+            color: #f1f1f1; /* Light text color */
+            font-family: 'HelveticaNeueBold', sans-serif; /* Utilisation de la police personnalisée */
+        }
+        h1 {
+            font-family: 'HelveticaNeueBold', sans-serif; /* Utilisation de la police personnalisée pour les titres */
+            font-size: 2.5rem;
+            text-align: center;
+            color: #ff3300; /* Red for heading */
+            margin-bottom: 2rem;
+        }
+        label {
+            font-size: 1.2rem;
+            color: #ff3300;
+        }
+        .form-control {
+            background-color: #3f3f3f; /* Dark input background */
+            border: none;
+            color: #f1f1f1; /* Light text inside the input fields */
+        }
+        .btn-primary {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+            font-size: 1.2rem;
+            padding: 10px 20px;
+        }
+        .btn-primary:hover {
+            background-color: #c0392b;
+            border-color: #c0392b;
+        }
+        #result h2 {
+            color: #ff3300; /* Match the header color */
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .mt-5 {
+            margin-top: 4rem !important;
+        }
+
+        .logo-image {
+            max-width: 80%; /* Responsive - s'adapte à la largeur du parent */
+            margin-bottom: 10%;
+            margin-left: 10%;
+            height: auto; /* Maintient le ratio d'aspect */
+            max-height: 200px; /* Limite la hauteur maximale */
+        }
+
+        /* Responsive pour s'assurer que le logo s'adapte bien aux petits écrans */
+        @media (max-width: 768px) {
+            .logo-image {
+                max-height: 150px; /* Réduit la taille du logo sur les petits écrans */
+            }
+        }
+    </style>
+
+    <script>
+        // Inclure le script JavaScript ici
+        const musicStylesBpm = {
+            'pop': [100, 130],
+            'hiphop': [85, 115],
+            'rock': [120, 150],
+            'electronic': [128, 160],
+            'classical': [60, 90],
+            'jazz': [90, 120],
+            'metal': [130, 180],
+            'reggae': [60, 90],
+            'reggaeton': [80, 100],
+            'techno': [120, 150],
+            'punk': [150, 190],
+            'rap': [85, 110],
+            'variété française': [90, 120],
+            'hyperpop': [160, 200]
+        };
+
+        function bpmToSpeed(bpm) {
+            const baseSpeed = 6;
+            const speed = baseSpeed + (bpm - 120) / 10;
+            return Math.max(3, Math.min(speed, 15));
+        }
+
+        function calculateCalories(speedKmh, durationMin) {
+            const distanceKm = speedKmh * (durationMin / 60);
+            const caloriesBurned = distanceKm * 30;  // Une estimation fixe des calories pour ce cas
+            return Math.round(caloriesBurned * 100) / 100;
+        }
+
+        function musicToRunningCalories(songName, musicStyle, songDurationMin) {
+            if (!(musicStyle in musicStylesBpm)) {
+                throw new Error(`Le style musical '${musicStyle}' n'est pas pris en charge.`);
+            }
+
+            const bpmRange = musicStylesBpm[musicStyle];
+            const bpm = Math.floor(Math.random() * (bpmRange[1] - bpmRange[0] + 1)) + bpmRange[0];
+            const speedKmh = bpmToSpeed(bpm);
+            const calories = calculateCalories(speedKmh, songDurationMin);
+            
+            return {
+                song_name: songName,
+                music_style: musicStyle,
+                bpm: bpm,
+                speed_kmh: Math.round(speedKmh * 100) / 100,
+                song_duration_min: songDurationMin,
+                calories_burned: calories
+            };
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const songName = document.getElementById("song_name").value;
+            const musicStyle = document.getElementById("style").value;
+            const songDuration = parseFloat(document.getElementById("song_duration").value);
+
+            const result = musicToRunningCalories(songName, musicStyle, songDuration);
+
+            document.getElementById("result").innerHTML = `
+                <h2>Résultats pour "${result.song_name}"</h2>
+                <p>Style : ${result.music_style}</p>
+                <p>BPM : ${result.bpm}</p>
+                <p>Vitesse estimée : ${result.speed_kmh} km/h</p>
+                <p>Calories brûlées : ${result.calories_burned} kcal</p>
+            `;
+        }
+    </script>
+</head>
+<body>
+    <div class="container mt-5">
+        <img class="logo-image" src="https://www.dropbox.com/scl/fi/625rxo86mrrz7blh7oaj7/logoooo.png?rlkey=sgs06thonq2r4ouhtyvelzxls&st=vwr5z49y&raw=1" alt="Description de l'image">
+        <h1>VIVEZ MIEUX, DANSEZ PLUS</h1>
+        <form id="calorieForm" onsubmit="handleFormSubmit(event)">
+            <div class="form-group">
+                <label for="song_name">Nom de la chanson</label>
+                <input type="text" class="form-control" id="song_name" name="song_name" required>
+            </div>
+            <div class="form-group">
+                <label for="style">Style de musique</label>
+                <select class="form-control" id="style" name="style" required>
+                    <option value="pop">Pop</option>
+                    <option value="hiphop">Hip-hop</option>
+                    <option value="rock">Rock</option>
+                    <option value="electronic">Electronic</option>
+                    <option value="classical">Classical</option>
+                    <option value="jazz">Jazz</option>
+                    <option value="metal">Metal</option>
+                    <option value="reggae">Reggae</option>
+                    <option value="reggaeton">Reggaeton</option>
+                    <option value="techno">Techno</option>
+                    <option value="punk">Punk</option>
+                    <option value="rap">Rap</option>
+                    <option value="variété française">Variété française</option>
+                    <option value="hyperpop">Hyperpop</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="song_duration">Durée de la chanson (minutes)</label>
+                <input type="number" step="0.01" class="form-control" id="song_duration" name="song_duration" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Calculer</button>
+        </form>
+
+        <div id="result" class="mt-5"></div>
+    </div>
+</body>
+</html>
