@@ -98,10 +98,14 @@
         };
 
         function bpmToSpeed(bpm) {
-            const baseSpeed = 6;
-            const speed = baseSpeed + (bpm - 120) / 10;
-            return Math.max(3, Math.min(speed, 15));
+            const baseSpeed = 5; // Vitesse de base pour un BPM de référence
+            const bpmReference = 120; // BPM de référence pour la vitesse de base
+            const speedAdjustment = Math.log(bpm / bpmReference) * 2; // Ajustement logarithmique
+            const speed = baseSpeed + speedAdjustment;
+            return Math.max(3, Math.min(speed, 12)); // Limiter la vitesse entre 3 et 12 km/h
         }
+
+
 
         function calculateCalories(speedKmh, durationMin) {
             const distanceKm = speedKmh * (durationMin / 60);
